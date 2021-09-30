@@ -1,0 +1,23 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t kaymkassai269/docker-course -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true kaymkassai269/docker-course npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-course"
+  env: "dockercourse-env"
+  bucket_name: "elasticbeanstalk-us-east-2-382968095055"
+  bucket_path: "docker-course"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
